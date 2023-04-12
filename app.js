@@ -1,6 +1,5 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const dotenv = require("dotenv");
 const path = require("path");
 
 const MONGODB_KEY = process.env.MONGODB_KEY;
