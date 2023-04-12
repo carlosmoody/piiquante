@@ -8,6 +8,7 @@ const MONGODB_KEY = process.env.MONGODB_KEY;
 const app = express();
 
 const userRoute = require("./routes/user");
+const sauceRoute = require("./routes/sauce");
 
 mongoose
   .connect(MONGODB_KEY, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -30,6 +31,7 @@ app.use((req, res, next) => {
 });
 
 app.use("/api/auth", userRoute);
+app.use("/api/sauce", sauceRoute);
 app.use("/images", express.static(path.join(__dirname, "images")));
 
 module.exports = app;
