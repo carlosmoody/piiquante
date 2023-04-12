@@ -66,7 +66,7 @@ exports.modifySauce = (req, res, next) => {
   Sauce.findOne({ _id: req.params.id })
     .then((sauce) => {
       if (sauce.userId != req.auth.userId) {
-        res.status(401).json({ message: "Action non-autorisée" });
+        res.status(403).json({ message: "Action non-autorisée" });
       } else {
         // Supprimer l'ancienne image si une nouvelle est envoyée
         if (req.file) {
@@ -95,7 +95,7 @@ exports.deleteSauce = (req, res, next) => {
   Sauce.findOne({ _id: req.params.id })
     .then((sauce) => {
       if (sauce.userId != req.auth.userId) {
-        res.status(401).json({ message: "Action non-autorisée" });
+        res.status(403).json({ message: "Action non-autorisée" });
       } else {
         const filename = sauce.imageUrl.split("/images/")[1];
         fs.unlink(`images/${filename}`, () => {
@@ -127,12 +127,12 @@ exports.likeSauce = (req, res, next) => {
     }
 
     function removeFeedback(array, userId) {
-      const index = array.findIndex(elem => elem == userId);
+      const index = array.findIndex((elem) => elem == userId);
       array.splice(index, 1);
     }
 
     function findFeedback(array, userId) {
-      if (array.findIndex(elem => elem == userId) != -1) {
+      if (array.findIndex((elem) => elem == userId) != -1) {
         return true;
       } else {
         return false;
@@ -141,14 +141,8 @@ exports.likeSauce = (req, res, next) => {
 
     switch (like) {
       case 1:
-        if (findFeedback(dislikesArray, userId)) {
-          removeFeedback(dislikesArray, userId);
-          sauce.dislikes -= 1;
-        }
-        if (!findFeedback(likesArray, userId)) {
-          addFeedback(likesArray, userId);
-          sauce.likes += 1;
-        }
+        addFeedback(likesArray, userId);
+        sauce.likes += 1;
         break;
       case 0:
         if (findFeedback(dislikesArray, userId)) {
@@ -161,23 +155,18 @@ exports.likeSauce = (req, res, next) => {
         }
         break;
       case -1:
-        if (findFeedback(likesArray, userId)) {
-          removeFeedback(likesArray, userId);
-          sauce.likes -= 1;
-        }
-        if (!findFeedback(dislikesArray, userId)) {
-          addFeedback(dislikesArray, userId);
-          sauce.dislikes += 1;
-        }
+        addFeedback(dislikesArray, userId);
+        sauce.dislikes += 1;
         break;
     }
 
-    console.log("likes : " + likesArray);
-    console.log("dislikes : " + dislikesArray);
-    console.log(sauce);
-
-    Sauce.findOneAndUpdate({ _id: req.params.id }, { ...sauce, _id: req.params.id })
-      .then(() => res.status(200).json({ message: "Sauce mise à jour avec sucès" }))
+    Sauce.findOneAndUpdate(
+      { _id: req.params.id },
+      { ...sauce, _id: req.params.id }
+    )
+      .then(() =>
+        res.status(200).json({ message: "Sauce mise à jour avec sucès" })
+      )
       .catch((error) => res.status(401).json({ error }));
   });
 };
