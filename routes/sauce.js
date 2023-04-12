@@ -1,11 +1,13 @@
 const express = require("express");
+const multer = require("../middleware/multer");
 const router = express.Router();
 
 const sauceCtrl = require("../controllers/sauce");
+const authorize = require("../middleware/authorize");
 
-router.get("/", sauceCtrl.findAllSauces);
-router.get("/:id", sauceCtrl.findOneSauce);
-router.post("/", );
+router.get("/", authorize, sauceCtrl.findAllSauces);
+router.get("/:id", authorize, sauceCtrl.findOneSauce);
+router.post("/", authorize, multer, sauceCtrl.createSauce);
 router.put("/:id", );
 router.delete("/:id", );
 router.post("/:id/like", );

@@ -30,7 +30,7 @@ app.use((req, res, next) => {
 });
 
 app.use("/api/auth", userRoute);
-app.use("/api/sauce", sauceRoute);
+app.use("/api/sauces", sauceRoute);
 app.use("/images", express.static(path.join(__dirname, "images")));
 
 module.exports = app;
