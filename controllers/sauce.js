@@ -68,6 +68,12 @@ exports.modifySauce = (req, res, next) => {
       if (sauce.userId != req.auth.userId) {
         res.status(401).json({ message: "Action non-autorisée" });
       } else {
+        // Supprimer l'ancienne image si une nouvelle est envoyée
+        if (req.file) {
+          const filename = sauce.imageUrl.split("/images/")[1];
+          console.log(filename);
+          fs.unlink(`images/${filename}`, () => {});
+        }
         Sauce.updateOne(
           { _id: req.params.id },
           { ...modifiedSauceObject, _id: req.params.id }
@@ -102,4 +108,12 @@ exports.deleteSauce = (req, res, next) => {
       }
     })
     .catch((error) => res.status(500).json({ error }));
+};
+
+/////////////////////////////////////////////////////////////
+//                    Liker une sauce                      //
+/////////////////////////////////////////////////////////////
+
+exports.likeSauce = (req, res, next) => {
+  res.status(200);
 };
