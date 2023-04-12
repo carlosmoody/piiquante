@@ -6,6 +6,8 @@ const MONGODB_KEY = process.env.MONGODB_KEY;
 
 const app = express();
 
+const userRoute = require("./routes/user");
+
 mongoose
   .connect(MONGODB_KEY, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log("Connexion à MongoDB réussie !"))
@@ -26,8 +28,6 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use("/", (req, res, next) => {
-  res.status(200).json({ message: "Tout est OK !"});
-});
+app.use("/api/auth/", userRoute);
 
 module.exports = app;
