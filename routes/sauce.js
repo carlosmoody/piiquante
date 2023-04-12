@@ -8,7 +8,7 @@ const authorize = require("../middleware/authorize");
 router.get("/", authorize, sauceCtrl.findAllSauces);
 router.get("/:id", authorize, sauceCtrl.findOneSauce);
 router.post("/", authorize, multer, sauceCtrl.createSauce);
-router.put("/:id", );
+router.put("/:id", authorize, multer, sauceCtrl.modifySauce);
 router.delete("/:id", );
 router.post("/:id/like", );
 
