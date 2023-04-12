@@ -71,7 +71,6 @@ exports.modifySauce = (req, res, next) => {
         // Supprimer l'ancienne image si une nouvelle est envoyée
         if (req.file) {
           const filename = sauce.imageUrl.split("/images/")[1];
-          console.log(filename);
           fs.unlink(`images/${filename}`, () => {});
         }
         Sauce.updateOne(
