@@ -28,6 +28,6 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use("/api/auth/", userRoute);
+app.use("/api/auth", userRoute);
 
 module.exports = app;
