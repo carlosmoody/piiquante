@@ -115,5 +115,69 @@ exports.deleteSauce = (req, res, next) => {
 /////////////////////////////////////////////////////////////
 
 exports.likeSauce = (req, res, next) => {
-  res.status(200);
+  Sauce.findOne({ _id: req.params.id }).then((sauce) => {
+    const like = req.body.like;
+    const userId = req.auth.userId;
+
+    let likesArray = sauce.usersLiked;
+    let dislikesArray = sauce.usersDisliked;
+
+    function addFeedback(array, userId) {
+      array.push(userId);
+    }
+
+    function removeFeedback(array, userId) {
+      const index = array.findIndex(elem => elem == userId);
+      array.splice(index, 1);
+    }
+
+    function findFeedback(array, userId) {
+      if (array.findIndex(elem => elem == userId) != -1) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+
+    switch (like) {
+      case 1:
+        if (findFeedback(dislikesArray, userId)) {
+          removeFeedback(dislikesArray, userId);
+          sauce.dislikes -= 1;
+        }
+        if (!findFeedback(likesArray, userId)) {
+          addFeedback(likesArray, userId);
+          sauce.likes += 1;
+        }
+        break;
+      case 0:
+        if (findFeedback(dislikesArray, userId)) {
+          removeFeedback(dislikesArray, userId);
+          sauce.dislikes -= 1;
+        }
+        if (findFeedback(likesArray, userId)) {
+          removeFeedback(likesArray, userId);
+          sauce.likes -= 1;
+        }
+        break;
+      case -1:
+        if (findFeedback(likesArray, userId)) {
+          removeFeedback(likesArray, userId);
+          sauce.likes -= 1;
+        }
+        if (!findFeedback(dislikesArray, userId)) {
+          addFeedback(dislikesArray, userId);
+          sauce.dislikes += 1;
+        }
+        break;
+    }
+
+    console.log("likes : " + likesArray);
+    console.log("dislikes : " + dislikesArray);
+    console.log(sauce);
+
+    Sauce.findOneAndUpdate({ _id: req.params.id }, { ...sauce, _id: req.params.id })
+      .then(() => res.status(200).json({ message: "Sauce mise à jour avec sucès" }))
+      .catch((error) => res.status(401).json({ error }));
+  });
 };
