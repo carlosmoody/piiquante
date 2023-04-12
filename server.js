@@ -1,10 +1,9 @@
 const dotenv = require("dotenv");
-dotenv.config;
+dotenv.config();
 
 const app = require("./app");
 
 const PORT = process.env.PORT;
-console.log(PORT);
 
 const http = require("http");
 
