@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
+const path = require("path");
 
 const MONGODB_KEY = process.env.MONGODB_KEY;
 
@@ -29,5 +30,6 @@ app.use((req, res, next) => {
 });
 
 app.use("/api/auth", userRoute);
+app.use("/images", express.static(path.join(__dirname, "images")));
 
 module.exports = app;
