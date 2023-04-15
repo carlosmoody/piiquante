@@ -10,7 +10,7 @@ const http = require("http");
 const server = http.createServer(app);
 
 server.on("listening", () => {
-  console.log("Listening on port " + PORT);
+  console.log(`Listening on http://localhost:` + PORT);
 });
 
 server.listen(PORT);
