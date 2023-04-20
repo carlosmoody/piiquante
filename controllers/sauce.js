@@ -27,25 +27,36 @@ exports.findOneSauce = (req, res, next) => {
 
 exports.createSauce = (req, res, next) => {
   const newSauceObject = JSON.parse(req.body.sauce);
-  delete newSauceObject.userId;
-  const newSauce = new Sauce({
-    ...newSauceObject,
-    userId: req.auth.userId,
-    imageUrl: `${req.protocol}://${req.get("host")}/images/${
-      req.file.filename
-    }`,
-    likes: 0,
-    dislikes: 0,
-    usersLiked: [],
-    usersDisliked: [],
-  });
 
-  newSauce
-    .save()
-    .then(() => {
-      res.status(201).json({ message: "Sauce créée avec succès" });
-    })
-    .catch((error) => res.status(400).json({ error }));
+  if (
+    !newSauceObject.name ||
+    !newSauceObject.manufacturer ||
+    !newSauceObject.description ||
+    !newSauceObject.mainPepper ||
+    !newSauceObject.heat
+  ) {
+    res.status(400).json({ message: "Incorrect request" });
+  } else {
+    delete newSauceObject.userId;
+    const newSauce = new Sauce({
+      ...newSauceObject,
+      userId: req.auth.userId,
+      imageUrl: `${req.protocol}://${req.get("host")}/images/${
+        req.file.filename
+      }`,
+      likes: 0,
+      dislikes: 0,
+      usersLiked: [],
+      usersDisliked: [],
+    });
+
+    newSauce
+      .save()
+      .then(() => {
+        res.status(201).json({ message: "Sauce créée avec succès" });
+      })
+      .catch((error) => res.status(400).json({ error }));
+  }
 };
 
 /////////////////////////////////////////////////////////////
