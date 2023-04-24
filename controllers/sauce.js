@@ -178,5 +178,6 @@ exports.likeSauce = (req, res, next) => {
         res.status(200).json({ message: "Sauce mise à jour avec sucès" })
       )
       .catch((error) => res.status(401).json({ error }));
-  });
+  })
+  .catch((error) => res.status(400).json({ error }));
 };
