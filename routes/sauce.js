@@ -1,9 +1,10 @@
 const express = require("express");
-const multer = require("../middleware/multer");
 const router = express.Router();
 
+const multer = require("../middleware/multer");
 const sauceCtrl = require("../controllers/sauce");
 const authorize = require("../middleware/authorize");
+
 
 router.get("/", authorize, sauceCtrl.findAllSauces);
 router.get("/:id", authorize, sauceCtrl.findOneSauce);
